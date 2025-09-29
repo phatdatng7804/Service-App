@@ -1,0 +1,3 @@
+INSERT INTO Roles (role, value) VALUES ('R1','Admin');
+INSERT INTO Roles (role, value) VALUES ('R2','Provider');
+INSERT INTO Roles (role, value) VALUES ('R3','User');

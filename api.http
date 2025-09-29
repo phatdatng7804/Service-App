@@ -1,0 +1,17 @@
+GET http://localhost:5000/api/v1/user/sdadad
+###
+POST http://localhost:5000/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "numberPhone": "0769394553",
+  "password": "Phatdat123456"
+}
+###
+POST http://localhost:5000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "numberPhone": "0769394553",
+  "password": "Phatdat123456"
+}
