@@ -15,3 +15,37 @@ Content-Type: application/json
   "numberPhone": "0769394553",
   "password": "Phatdat123456"
 }
+###
+GET http://localhost:5000/api/v1/category/getCategory
+###
+PUT http://localhost:5000/api/v1/category/updateCategory/1
+Content-Type: application/json
+
+{
+  "name": "Làm tóc",
+  "description": "Bao gồm các dịch vụ như cắt tóc, uốn tóc, nhuộm tóc nam/nữ"
+}
+###
+POST http://localhost:5000/api/v1/category/createCategory
+Content-Type: application/json
+
+{
+  "name": "Thể Chất",
+  "description": "Dịch vụ về thể chất"
+}
+###
+DELETE http://localhost:5000/api/v1/category/deleteCategory/6
+###
+GET http://localhost:5000/api/v1/service/getService
+
+###
+POST http://localhost:5000/api/v1/service/createService
+Content-Type: application/json
+
+{
+  "name": "Cắt tóc cao cấp",
+  "description": "Tư vấn và tạo kiểu bởi stylist chuyên nghiệp",
+  "duration_minutes": 45,
+  "price": 150000,
+  "category_id": 1
+}
