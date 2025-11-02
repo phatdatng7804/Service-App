@@ -18,19 +18,19 @@ Content-Type: application/json
 ###
 GET http://localhost:5000/api/v1/category/getCategory
 ###
-PUT http://localhost:5000/api/v1/category/updateCategory/1
+PUT http://localhost:5000/api/v1/category/updateCategory/7
 Content-Type: application/json
 
 {
-  "name": "Làm tóc",
-  "description": "Bao gồm các dịch vụ như cắt tóc, uốn tóc, nhuộm tóc nam/nữ"
+  "name": "Thể hình",
+  "description": "Bao gồm các dịch vụ như tìm phòng gym, yoga, pilates"
 }
 ###
 POST http://localhost:5000/api/v1/category/createCategory
 Content-Type: application/json
 
 {
-  "name": "Thể Chất",
+  "name": "Thể hình",
   "description": "Dịch vụ về thể chất"
 }
 ###
@@ -43,9 +43,22 @@ POST http://localhost:5000/api/v1/service/createService
 Content-Type: application/json
 
 {
-  "name": "Cắt tóc cao cấp",
-  "description": "Tư vấn và tạo kiểu bởi stylist chuyên nghiệp",
-  "duration_minutes": 45,
-  "price": 150000,
+  "name": "Massage Thư giản",
+  "description": "Thực hiển bởi chuyên viên massage có kinh nghiệm và kĩ năng cao",
+  "duration_minutes": 60,
+  "price": 120000,
   "category_id": 1
 }
+###
+PUT http://localhost:5000/api/v1/service/updateService/3
+Content-Type: application/json
+
+{
+  "name": "Massage Thư giản",
+  "description": "Thực hiển bởi chuyên viên massage có kinh nghiệm và kĩ năng cao",
+  "duration_minutes": 60,
+  "price": 120000,
+  "category_id": 3
+}
+###
+DELETE http://localhost:5000/api/v1/service/deleteService/3
