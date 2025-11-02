@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "service_id",
         as: "staffs",
       });
+      Service.belongsTo(models.User, {
+        as: "creator",
+        foreignKey: "created_by",
+      });
 
       // define association here
     }

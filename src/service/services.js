@@ -25,8 +25,8 @@ export const createService = (data) =>
     try {
       const response = await Service.create(data);
       resolve({
-        err: response ? 0 : 1,
-        msg: response ? "Create service successfully" : "Create service failed",
+        err: 0,
+        msg: "Create service successfully",
         data: response,
       });
     } catch (error) {
