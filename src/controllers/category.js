@@ -9,7 +9,7 @@ export const getAllCategories = async (req, res) => {
     const response = await service.getAllCategories();
     return res.status(200).json(response);
   } catch (error) {
-    res.status(500).json({ err: -1, mes: "Server error" });
+    return internalSvError(res);
   }
 };
 export const createCategory = async (req, res) => {

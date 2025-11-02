@@ -12,6 +12,12 @@ module.exports = (sequelize, DataTypes) => {
         as: "category",
         foreignKey: "category_id",
       });
+      Service.belongsToMany(models.User, {
+        through: models.StaffService,
+        foreignKey: "service_id",
+        as: "staffs",
+      });
+
       // define association here
     }
   }
@@ -22,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       duration_minutes: DataTypes.INTEGER,
       price: DataTypes.DECIMAL(12, 0),
       category_id: DataTypes.STRING,
-      is_active: { type: DataTypes.BOOLEAN, defaultValue: true },
+      is_active: DataTypes.BOOLEAN,
     },
     {
       sequelize,
