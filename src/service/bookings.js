@@ -3,19 +3,18 @@ import { Op } from "sequelize";
 const Booking = db.Booking;
 const Service = db.Service;
 
-export const creatBooking = (data) =>
-  new Promise(async (reslove, reject) => {
+export const createBooking = (data) =>
+  new Promise(async (resolve, reject) => {
     try {
-      const { service_id, user_id, booking_date, start_time, note } = data;
-      const service = await Service.findByPk(service_id, {
+      const service = await Service.findByPk(id, {
         include: [
           { model: db.User, as: "staff", attributes: ["id", "full_name"] },
         ],
       });
-      if (!service) throw new Error("Service not found");
+      if (!service) return resolve({ err: 1, mes: "Service not found" });
 
-      const total_price = service.price;
       const staff_id = service.staff.id;
+      if (!staff_id) return resolve({ err: 1, mes: "Staff not found" });
 
       const conflict = await Booking.findOne({
         where: {
@@ -23,13 +22,24 @@ export const creatBooking = (data) =>
           booking_date,
           start_time,
           [Op.or]: [
-            {
-              start_time: { [Op.between]: [start_time, service.duration] },
-            },
+            { start_time: { [Op.between]: [start_time, service.duration] } },
+            { end_time: { [Op.between]: [start_time, service.duration] } },
           ],
+          status: { [Op.in]: ["pending", "confirmed"] },
         },
       });
-      const booking = await Booking.creat(data);
+      if (conflict)
+        return resolve({
+          err: 1,
+          mes: "Time slot already booked for this staff",
+        });
+
+      const booking = await Booking.create(data);
+      resolve({
+        err: 0,
+        mes: "Create booking successfully",
+        booking: booking,
+      });
     } catch (error) {
       reject(error);
     }

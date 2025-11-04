@@ -11,6 +11,6 @@ routes.use(verifyToken);
 routes.get("/getService", isAdminOrStaff, controllers.getAllServices);
 routes.post("/createService", isStaff, controllers.createService);
 routes.put("/updateService/:id", isStaff, controllers.updateService);
-routes.delete("/deleteService/:id", isStaff, controllers.deleteService);
+routes.delete("/deleteService/:id", isAdminOrStaff, controllers.deleteService);
 
 module.exports = routes;
