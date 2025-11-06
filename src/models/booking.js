@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Booking.belongsTo(models.User, {
-        foreignKey: "customer_id",
+        foreignKey: "user_id",
         as: "customer",
       });
       Booking.belongsTo(models.Service, {
@@ -21,11 +21,25 @@ module.exports = (sequelize, DataTypes) => {
   }
   Booking.init(
     {
-      service_id: DataTypes.INTEGER,
-      customer_id: DataTypes.INTEGER,
-      staff_id: DataTypes.INTEGER,
+      service_id: {
+        type: DataTypes.INTEGER,
+        field: "service_id",
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        field: "user_id",
+      },
+      number_phone: DataTypes.STRING,
+      staff_id: {
+        type: DataTypes.INTEGER,
+        field: "staff_id",
+      },
       booking_date: DataTypes.DATE,
       start_time: DataTypes.TIME,
+      end_time: {
+        type: DataTypes.TIME,
+        field: "time_end",
+      },
       status: DataTypes.ENUM("pending", "confirmed", "completed", "canceled"),
       note: DataTypes.TEXT,
       total_price: DataTypes.DECIMAL(12, 0),

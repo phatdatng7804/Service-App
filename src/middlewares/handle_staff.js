@@ -41,3 +41,11 @@ export const isAdminOrStaff = (req, res, next) => {
   }
   next();
 };
+export const isStaffOrCustomer = (req, res, next) => {
+  if (Number(req.user.roleId) !== 3 && Number(req.user.roleId) !== 2) {
+    return res
+      .status(403)
+      .json({ err: 1, mes: "Require staff or customer role" });
+  }
+  next();
+};

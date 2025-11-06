@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         as: "creator",
         foreignKey: "created_by",
       });
-
       // define association here
     }
   }
