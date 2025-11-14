@@ -14,9 +14,10 @@ export const getAllBookings = async (req, res) => {
   try {
     const { error } = Joi.object().validate(req.query);
     if (error) return badRequest(error.details[0].message, res);
-    const response = await service.getAllBooking();
+    const response = await service.getAllBooking(req.user, req.query);
     return res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     return internalSvError(res);
   }
 };
@@ -74,9 +75,12 @@ export const cancelAllBookings = async (req, res) => {
     const schema = cancelAllBookingsSchema;
     const { error } = schema.validate(req.body);
     if (error) return badRequest(error.details[0].message, res);
-    const response = await service.cancelAllBooking(req.body);
+    const staff_id = req.user.id;
+    const { note } = req.body;
+    const response = await service.cancelAllBooking(staff_id, note);
     return res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     return internalSvError(res);
   }
 };

@@ -4,4 +4,5 @@ export * from "./category";
 export * from "./services";
 export * from "./adminUser";
 export * from "./bookings";
-export * from "./smsService";
+export * from "./service.rating";
+export * from "./service.AdminRating";

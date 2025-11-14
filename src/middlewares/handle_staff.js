@@ -8,7 +8,7 @@ export const verifyToken = async (req, res, next) => {
     if (!token)
       return res.status(401).json({
         err: 1,
-        mes: "Missing accsess token",
+        mes: "Missing access token",
       });
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -29,23 +29,15 @@ export const verifyToken = async (req, res, next) => {
     return res.status(403).json({ err: 1, mes: "Invalid token" });
   }
 };
-export const isStaff = (req, res, next) => {
-  if (Number(req.user.roleId) !== 2) {
-    return res.status(403).json({ err: 1, mes: "Require staff role" });
-  }
-  next();
-};
-export const isAdminOrStaff = (req, res, next) => {
-  if (Number(req.user.roleId) !== 1 && Number(req.user.roleId) !== 2) {
-    return res.status(403).json({ err: 1, mes: "Require admin or staff role" });
-  }
-  next();
-};
-export const isStaffOrCustomer = (req, res, next) => {
-  if (Number(req.user.roleId) !== 3 && Number(req.user.roleId) !== 2) {
-    return res
-      .status(403)
-      .json({ err: 1, mes: "Require staff or customer role" });
-  }
-  next();
+export const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    const roleId = Number(req.user.roleId);
+    if (!allowedRoles.includes(roleId)) {
+      return res.status(403).json({
+        err: 1,
+        mes: `Require one of roles: ${allowedRoles.join(", ")}`,
+      });
+    }
+    next();
+  };
 };

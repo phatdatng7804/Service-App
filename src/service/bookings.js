@@ -1,41 +1,44 @@
 import db from "../models";
 import { Sequelize, Op } from "sequelize";
-import { sendCSKHSMS } from "./smsService";
+import { notifyBookingCancel } from "./notifiSms";
 
 const Booking = db.Booking;
 const Service = db.Service;
 const Cancel = db.BookingCancel;
 const User = db.User;
-export const getAllBooking = (filter = {}) =>
+export const getAllBooking = (user, filter = {}) =>
   new Promise(async (resolve, reject) => {
     try {
       const where = {};
       if (filter.status) {
         where.status = filter.status;
       }
-      if (filter.staff_id) {
-        where.staff_id = filter.staff_id;
-      }
       if (filter.date) {
         where.booking_date = filter.date;
+      }
+      if (Number(user.roleId) === 1) {
+      } else if (Number(user.roleId) === 2) {
+        where.staff_id = user.id;
+      } else if (Number(user.roleId) === 3) {
+        where.user_id = user.id;
       }
       const bookings = await Booking.findAll({
         where,
         include: [
           {
-            model: db.User,
+            model: User,
             as: "customer",
             attributes: ["id", "full_name", "email"],
           },
           {
-            model: db.User,
+            model: User,
             as: "staff",
             attributes: ["id", "full_name", "email"],
           },
           {
-            model: db.Service,
+            model: Service,
             as: "service",
-            attributes: ["id", "name", "duration"],
+            attributes: ["id", "name"],
           },
         ],
         order: [
@@ -209,73 +212,73 @@ export const cancelBooking = (id, cancel_by, cancel_note, user) =>
   });
 export const cancelAllBooking = (staff_id, note) =>
   new Promise(async (resolve, reject) => {
-    const traction = await db.sequelize.transaction({
+    const transaction = await db.sequelize.transaction({
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.READ_COMMITTED,
     });
     try {
-      const today = new Date().toISOString().split("T")[0];
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
 
       const bookings = await Booking.findAll({
         where: {
           staff_id,
-          booking_date: today,
+          booking_date: { [Op.between]: [startOfDay, endOfDay] },
           status: { [Op.in]: ["pending", "confirmed"] },
         },
         include: [
           {
-            model: db.User,
+            model: User,
             as: "customer",
             attributes: ["id", "full_name", "phone_number"],
           },
+          {
+            model: Service,
+            as: "service",
+            attributes: ["id", "created_by"],
+          },
         ],
-        traction,
-        lock: traction.LOCK.UPDATE,
+        transaction,
+        lock: transaction.LOCK.UPDATE,
       });
+
       if (!bookings.length) {
-        await traction.rollback();
+        await transaction.rollback();
         return resolve({
           err: 1,
           mes: "No booking today",
         });
       }
+      const validBookings = bookings.filter(
+        (b) => b.service?.created_by === staff_id
+      );
+
+      if (!validBookings.length) {
+        await transaction.rollback();
+        return resolve({
+          err: 1,
+          mes: "You are not authorized to cancel these bookings",
+        });
+      }
       const bookingId = await bookings.map((b) => b.id);
       await Booking.update(
         { status: "canceled" },
-        { where: { id: { [Op.in]: bookingId } } },
-        traction
+        { where: { id: { [Op.in]: bookingId } }, transaction }
       );
       const cancelLogs = bookings.map((b) => ({
         booking_id: b.id,
-        cancelled_by: staff_id,
-        cancel_not: note || "Staff unavailable",
+        cancel_by: staff_id,
+        cancel_note: note || "Staff unavailable",
       }));
-      await Cancel.bulkCreate(cancelLogs, { traction });
-      await traction.commit();
-
-      const customers = bookings
-        .filter((b) => b.customer?.phone_number)
-        .map((b) => ({
-          name: b.customer.full_name,
-          phone: b.customer.phone_number.startsWith("84")
-            ? b.customer.phone_number
-            : `84${b.customer.phone_number.replace(/^0+/, "")}`,
-        }));
-      console.log(`Sending cancellation SMS to ${customers.length} customers`);
-      for (const c of customers) {
-        const message = `Dear ${c.name}, lịch hẹn của bạn hôm nay đã bị hủy do việc khẩn cấp. Chúng tôi xin lỗi vì sự bất tiện này. `;
-        const result = await sendCSKHSMS(c.phone, message);
-
-        console.log(
-          result.err === 0
-            ? `SMS sent to ${c.phone}`
-            : `Failed to send SMS to ${c.phone}`
-        );
-      }
+      await Cancel.bulkCreate(cancelLogs, { transaction });
+      await transaction.commit();
+      await notifyBookingCancel(bookings);
       resolve({
         err: 0,
       });
     } catch (error) {
-      await traction.rollback();
+      await transaction.rollback();
       reject(error);
     }
   });

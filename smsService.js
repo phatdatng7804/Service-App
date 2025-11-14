@@ -15,7 +15,7 @@ const SMS_TYPE = {
  * @returns Promise<{err: number, mes: string,data?: object}>
  */
 
-const sendSMS = (phones, content, type = SMS_TYPE.CSKH, sender = "") =>
+const sendSMS = (phones, content, type = SMS_TYPE.OTP, sender = "") =>
   new Promise((resolve, reject) => {
     const params = JSON.stringify({
       to: phones,
@@ -69,7 +69,7 @@ const sendSMS = (phones, content, type = SMS_TYPE.CSKH, sender = "") =>
 
 /** Gửi tin nhắn CSKH */
 export const sendCSKHSMS = (phones, message, sender = "") =>
-  sendSMS(phones, message, SMS_TYPE.CSKH, sender);
+  sendSMS(phones, message, SMS_TYPE.OTP, sender);
 
 /** Gửi tin nhắn OTP */
 export const sendOTPSMS = (phones, message, sender = "") =>

@@ -10,6 +10,10 @@ export const createBookingSchema = Joi.object({
     "any.required": "Booking date is required",
     "date.base": "Booking date must be a valid date",
   }),
+  number_phone: Joi.string()
+    .pattern(/^[0-9]{9,11}$/)
+    .allow("", null)
+    .optional(),
   start_time: Joi.string()
     .pattern(/^([01]\d|2[0-3]):([0-5]\d)$/)
     .required()
@@ -42,7 +46,7 @@ export const updateBookingSchema = Joi.object({
   note: Joi.string().allow("", null).max(255).optional(),
 });
 export const cancelAllBookingsSchema = Joi.object({
-  note: Joi.string().allow("", null).max(255).optional(),
+  cancel_note: Joi.string().allow("", null).max(255).optional(),
 });
 export const cancelBookingSchema = Joi.object({
   cancel_note: Joi.string().allow("", null).max(255).optional(),

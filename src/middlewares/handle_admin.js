@@ -9,7 +9,7 @@ export const verifyToken = async (req, res, next) => {
     if (!token)
       return res.status(401).json({
         err: 1,
-        mes: "Missing accsess token",
+        mes: "Missing access token",
       });
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 

@@ -8,9 +8,9 @@ import express from "express";
 const routes = express.Router();
 
 routes.use(verifyToken);
-routes.get("/getCategory", isAdminOrStaff, controllers.getAllCategories);
-routes.post("/createCategory", isAdmin, controllers.createCategory);
-routes.put("/updateCategory/:id", isAdmin, controllers.updateCategory);
-routes.delete("/deleteCategory/:id", isAdmin, controllers.deleteCategory);
+routes.get("/get-all", isAdminOrStaff, controllers.getAllCategories);
+routes.post("/create", isAdmin, controllers.createCategory);
+routes.put("/update/:id", isAdmin, controllers.updateCategory);
+routes.delete("/delete/:id", isAdmin, controllers.deleteCategory);
 
 module.exports = routes;

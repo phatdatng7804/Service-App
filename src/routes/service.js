@@ -1,16 +1,12 @@
 import * as controllers from "../controllers";
-import {
-  verifyToken,
-  isStaff,
-  isAdminOrStaff,
-} from "../middlewares/handle_staff";
+import { verifyToken, authorizeRoles } from "../middlewares/handle_staff";
 import express from "express";
 const routes = express.Router();
 
 routes.use(verifyToken);
-routes.get("/getService", isAdminOrStaff, controllers.getAllServices);
-routes.post("/createService", isStaff, controllers.createService);
-routes.put("/updateService/:id", isStaff, controllers.updateService);
-routes.delete("/deleteService/:id", isAdminOrStaff, controllers.deleteService);
+routes.get("/get-all", authorizeRoles(1, 2), controllers.getAllServices);
+routes.post("/create", authorizeRoles(2), controllers.createService);
+routes.put("/update/:id", authorizeRoles(2), controllers.updateService);
+routes.delete("/delete/:id", authorizeRoles(1, 2), controllers.deleteService);
 
 module.exports = routes;
