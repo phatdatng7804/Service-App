@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import db from "../models";
-
 export const verifyToken = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -30,16 +29,15 @@ export const verifyToken = async (req, res, next) => {
     return res.status(403).json({ err: 1, mes: "Invalid token" });
   }
 };
-export const isAdmin = (req, res, next) => {
-  if (Number(req.user.roleId) !== 1) {
-    return res.status(403).json({ err: 1, mes: "Require admin role" });
-  }
-  next();
-};
-
-export const isAdminOrStaff = (req, res, next) => {
-  if (Number(req.user.roleId) !== 1 && Number(req.user.roleId) !== 2) {
-    return res.status(403).json({ err: 1, mes: "Require admin or staff role" });
-  }
-  next();
+export const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    const roleId = Number(req.user.roleId);
+    if (!allowedRoles.includes(roleId)) {
+      return res.status(403).json({
+        err: 1,
+        mes: `Require one of roles: ${allowedRoles.join(", ")}`,
+      });
+    }
+    next();
+  };
 };

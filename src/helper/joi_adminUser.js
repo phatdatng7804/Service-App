@@ -1,5 +1,4 @@
 import Joi from "joi";
-import role from "../models/role";
 
 export const filterUserSchema = Joi.object({
   role_id: Joi.number().integer().valid(1, 2, 3).optional(),

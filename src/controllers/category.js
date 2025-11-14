@@ -1,6 +1,9 @@
 import * as service from "../service";
 import { internalSvError, badRequest } from "../middlewares/handle_error";
-import { categorySchema, updateCategorySchema } from "../helper/joi_category";
+import {
+  categorySchema,
+  updateCategorySchema,
+} from "../helper/joi_category.js";
 import Joi from "joi";
 export const getAllCategories = async (req, res) => {
   try {

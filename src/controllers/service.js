@@ -10,7 +10,6 @@ export const getAllServices = async (req, res) => {
     const response = await service.getAllServices();
     return res.status(200).json(response);
   } catch (error) {
-    console.log(error);
     return internalSvError(res);
   }
 };
@@ -19,7 +18,9 @@ export const createService = async (req, res) => {
     const schema = serviceSchema;
     const { error } = schema.validate(req.body);
     if (error) return badRequest(error.details[0].message, res);
-    const response = await service.createService(req.body);
+
+    const payload = { ...req.body, created_by: req.user.id };
+    const response = await service.createService(payload);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
