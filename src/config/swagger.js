@@ -1,6 +1,6 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-
+require("dotenv").config();
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5000",
+        url: process.env.SERVER_URL || "http://localhost:5000",
       },
     ],
     components: {
@@ -24,7 +24,7 @@ const options = {
       },
     },
   },
-  apis: ["./src/swagger/*.js"],
+  apis: ["./src/swagger/**/*.js", "./dist/src/swagger/**/*.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

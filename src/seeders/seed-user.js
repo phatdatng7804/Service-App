@@ -8,7 +8,7 @@ module.exports = {
       bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
     await queryInterface.bulkInsert(
-      "users",
+      "Users",
       [
         {
           full_name: "Admin System",

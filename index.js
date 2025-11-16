@@ -3,7 +3,6 @@ import cors from "cors";
 import initRoutes from "./src/routes/index.js";
 import { swaggerDocs } from "./src/config/swagger.js";
 require("dotenv").config();
-require("./database");
 
 const app = express();
 app.use(
