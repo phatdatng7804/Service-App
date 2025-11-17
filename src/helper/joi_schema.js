@@ -12,3 +12,7 @@ export const RegisterSchema = Joi.object({
   numberPhone: numberPhone,
   password: password,
 });
+export const verifySchema = Joi.object({
+  numberPhone: numberPhone,
+  otp: Joi.string().length(6).required(),
+});

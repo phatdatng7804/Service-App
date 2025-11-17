@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       password_hash: DataTypes.STRING,
       phone_number: DataTypes.STRING,
       role_id: DataTypes.STRING,
+      otp_code: DataTypes.STRING,
+      otp_expires: DataTypes.DATE,
       is_active: DataTypes.BOOLEAN,
     },
     {
