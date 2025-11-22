@@ -6,3 +6,5 @@ export * from "./adminUser";
 export * from "./bookings";
 export * from "./service.rating";
 export * from "./service.AdminRating";
+export * from "./user.upload";
+export * from "./service.notification";

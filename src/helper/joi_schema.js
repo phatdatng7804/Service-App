@@ -12,3 +12,16 @@ export const RegisterSchema = Joi.object({
   numberPhone: numberPhone,
   password: password,
 });
+export const verifySchema = Joi.object({
+  numberPhone: numberPhone,
+  otp: Joi.string().length(6).required(),
+});
+export const forgotSchema = Joi.object({
+  numberPhone: numberPhone,
+});
+export const passResetSchema = Joi.object({
+  newPassword: password.required(),
+});
+export const verifyOTP = Joi.object({
+  otp: Joi.string().length(6).required(),
+});

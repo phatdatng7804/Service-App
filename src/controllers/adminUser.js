@@ -17,7 +17,7 @@ export const getAllUsers = async (req, res) => {
     return internalSvError(res);
   }
 };
-export const updateUser = async (req, res) => {
+export const updateUserAd = async (req, res) => {
   try {
     const { error } = updateUserSchema.validate(req.body);
     if (error) return badRequest(error.details[0].message, res);
