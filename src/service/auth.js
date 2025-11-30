@@ -1,7 +1,7 @@
 import db from "../models";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendOTPMail } from "../utils/sendmail";
+import { sendOTPMail, sendOTP } from "../utils/sendmail";
 import { v4 as uuidv4 } from "uuid";
 const User = db.User;
 const forgot = db.PasswordResetOtp;
@@ -112,6 +112,11 @@ export const login = (numberPhone, password) =>
         err: 0,
         mes: "Login success",
         access_token: `Bearer ${token}`,
+        user: {
+          full_name: user.full_name,
+          gender: user.gender,
+          avatar: user.avatar,
+        },
       });
     } catch (error) {
       reject(error);
@@ -141,7 +146,7 @@ export const forgotPass = (phone) => {
         verified: false,
       });
 
-      await sendOTPMail(user.email, otp);
+      await sendOTP(user.email, otp);
       resolve({
         err: 0,
         mes: "OTP sent to your email",

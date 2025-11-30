@@ -7,6 +7,7 @@ export const serviceSchema = Joi.object({
   price: Joi.number().integer().min(10000).required(),
   category_id: Joi.number().integer().required(),
   is_active: Joi.boolean().optional(),
+  image: Joi.string().uri().optional(),
 });
 export const updateSchema = Joi.object({
   name: Joi.string().min(3).max(150).optional(),
@@ -15,4 +16,5 @@ export const updateSchema = Joi.object({
   price: Joi.number().integer().min(10000).optional(),
   category_id: Joi.number().integer().optional(),
   is_active: Joi.boolean().optional(),
+  image: Joi.string().uri().optional(),
 });

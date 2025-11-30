@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       price: DataTypes.DECIMAL(12, 0),
       category_id: DataTypes.STRING,
       is_active: DataTypes.BOOLEAN,
+      image: DataTypes.STRING,
     },
     {
       sequelize,

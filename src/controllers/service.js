@@ -27,11 +27,15 @@ export const getMyService = async (req, res) => {
 export const createService = async (req, res) => {
   try {
     const schema = serviceSchema;
-    const { error } = schema.validate(req.body);
+    const { error, value } = schema.validate(req.body, {
+      abortEarly: false,
+      convert: true,
+    });
     if (error) return badRequest(error.details[0].message, res);
+    const file = req.file;
 
-    const payload = { ...req.body, created_by: req.user.id };
-    const response = await service.createService(payload);
+    const payload = { ...value, created_by: req.user.id };
+    const response = await service.createService(payload, file);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -43,7 +47,9 @@ export const updateService = async (req, res) => {
     const schema = updateSchema;
     const { error } = schema.validate(req.body);
     if (error) return badRequest(error.details[0].message, res);
-    const response = await service.updateService(req.params.id, req.body);
+    const payload = { ...req.body, updated_by: req.user.id };
+    const file = req.file;
+    const response = await service.updateService(req.params.id, payload, file);
     return res.status(200).json(response);
   } catch (error) {
     return internalSvError(res);
