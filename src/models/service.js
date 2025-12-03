@@ -21,7 +21,14 @@ module.exports = (sequelize, DataTypes) => {
         as: "creator",
         foreignKey: "created_by",
       });
-      // define association here
+      Service.hasMany(models.Favorite, {
+        foreignKey: "service_id",
+        as: "favorites",
+      });
+      Service.hasMany(models.Rating, {
+        foreignKey: "service_id",
+        as: "ratings",
+      });
     }
   }
   Service.init(
@@ -32,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       price: DataTypes.DECIMAL(12, 0),
       category_id: DataTypes.STRING,
       is_active: DataTypes.BOOLEAN,
+      image: DataTypes.STRING,
     },
     {
       sequelize,

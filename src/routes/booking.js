@@ -10,6 +10,6 @@ routes.get("/get-all", authorizeRoles(1, 2, 3), controllers.getAllBookings);
 routes.post("/create", authorizeRoles(2, 3), controllers.createBookings);
 routes.put("/update/:id", authorizeRoles(2, 3), controllers.updateBookings);
 routes.post("/cancel/:id", authorizeRoles(2, 3), controllers.cancelBookings);
-routes.post("/cancel-all", authorizeRoles(1), controllers.cancelAllBookings);
+routes.post("/cancel-all", authorizeRoles(2), controllers.cancelAllBookings);
 
 module.exports = routes;

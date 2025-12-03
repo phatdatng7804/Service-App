@@ -27,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
       otp_code: DataTypes.STRING,
       otp_expires: DataTypes.DATE,
       is_active: DataTypes.BOOLEAN,
+      avatar: DataTypes.STRING,
+      gender: DataTypes.STRING,
     },
     {
       sequelize,

@@ -1,6 +1,12 @@
 import db from "../models";
 import { Sequelize, Op } from "sequelize";
-import { notifyBookingCancel } from "./notifiSms";
+
+import {
+  notifyBookingCreated,
+  notifyBookingConfirmed,
+  notifyBookingCompleted,
+  notifyBookingCanceled,
+} from "./appNotification";
 
 const Booking = db.Booking;
 const Service = db.Service;
@@ -128,6 +134,12 @@ export const createBooking = (data) => {
         total_price: service.price,
       });
       await transaction.commit();
+      notifyBookingCreated(user_id, newBooking).catch((e) =>
+        console.log("notifyBookingCreated (customer) error:", e.message)
+      );
+      notifyBookingCreated(staff_id, newBooking).catch((e) =>
+        console.log("notifyBookingCreated (staff) error:", e.message)
+      );
       resolve({
         err: 0,
         mes: "Booking created successfully",
@@ -166,6 +178,18 @@ export const updateBooking = (id, status, note, user) =>
         booking.note = note;
       }
       await booking.save();
+      const providerName = booking.staff?.full_name;
+      if (status === "confirmed") {
+        notifyBookingConfirmed(booking.user_id, booking, providerName).catch(
+          (e) =>
+            console.log("notifyBookingConfirmed (customer) error:", e.message)
+        );
+      } else if (status === "completed") {
+        notifyBookingCompleted(booking.user_id, booking).catch((e) =>
+          console.log("notifyBookingCompleted error:", e.message)
+        );
+      }
+      //
       resolve({
         err: 0,
         mes: "Booking status updated successfully",
@@ -201,6 +225,14 @@ export const cancelBooking = (id, cancel_by, cancel_note, user) =>
       });
       booking.status = "canceled";
       await booking.save();
+      notifyBookingCanceled(booking.user_id, booking, cancel_note).catch((e) =>
+        console.log("notifyBookingCanceled (customer) error:", e.message)
+      );
+      if (booking.staff_id) {
+        notifyBookingCanceled(booking.staff_id, booking, cancel_note).catch(
+          (e) => console.log("notifyBookingCanceled (staff) error:", e.message)
+        );
+      }
       resolve({
         err: 0,
         mes: "Booking canceled successfully",
@@ -273,7 +305,15 @@ export const cancelAllBooking = (staff_id, note) =>
       }));
       await Cancel.bulkCreate(cancelLogs, { transaction });
       await transaction.commit();
-      await notifyBookingCancel(bookings);
+      const reason = note || "Staff unavailable";
+      bookings.forEach((b) => {
+        notifyBookingCanceled(b.user_id, b, reason).catch((e) =>
+          console.log(
+            "notifyBookingCanceled (cancelAll, customer) error:",
+            e.message
+          )
+        );
+      });
       resolve({
         err: 0,
       });

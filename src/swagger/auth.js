@@ -102,3 +102,102 @@
  *       500:
  *         description: Lỗi server
  */
+/**
+ * @swagger
+ * /api/v1/auth/forgot-password:
+ *   post:
+ *     summary: Gửi OTP reset mật khẩu
+ *     tags: [Forgot Password]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - numberPhone
+ *             properties:
+ *               numberPhone:
+ *                 type: string
+ *                 pattern: "^[0-9]{10}$"
+ *                 example: ""
+ *     responses:
+ *       200:
+ *         description: Gửi OTP thành công và trả về reset_token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 err:
+ *                   type: integer
+ *                   example: 0
+ *                 mes:
+ *                   type: string
+ *                   example: "OTP sent to your email"
+ *                 reset_token:
+ *                   type: string
+ *                   example: ""
+ *       400:
+ *         description: Số điện thoại không hợp lệ
+ *       500:
+ *         description: Lỗi server
+ */
+/**
+ * @swagger
+ * /api/v1/auth/verify-reset-otp:
+ *   post:
+ *     summary: Xác minh OTP reset mật khẩu
+ *     tags: [Forgot Password]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - reset_token
+ *               - otp
+ *             properties:
+ *               reset_token:
+ *                 type: string
+ *                 example: ""
+ *               otp:
+ *                 type: string
+ *                 pattern: "^[0-9]{6}$"
+ *                 example: ""
+ *     responses:
+ *       200:
+ *         description: OTP hợp lệ
+ *       400:
+ *         description: OTP hoặc token không hợp lệ / hết hạn
+ *       500:
+ *         description: Lỗi server
+ */
+/**
+ * @swagger
+ * /api/v1/auth/reset-password:
+ *   post:
+ *     summary: Đổi mật khẩu bằng reset_token
+ *     tags: [Forgot Password]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newPassword
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 pattern: "^[a-zA-Z0-9]{6,30}$"
+ *                 example: ""
+ *     responses:
+ *       200:
+ *         description: Đổi mật khẩu thành công
+ *       400:
+ *         description: Token không hợp lệ hoặc OTP chưa verify
+ *       500:
+ *         description: Lỗi server
+ */

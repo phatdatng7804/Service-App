@@ -23,6 +23,29 @@
  */
 /**
  * @swagger
+ * /api/v1/service/get-my-service:
+ *   get:
+ *     summary: Lấy danh sách dịch vụ của cá nhân
+ *     tags: [Service]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Từ khóa tìm kiếm dịch vụ
+ *     responses:
+ *       200:
+ *         description: Thành công
+ *       400:
+ *         description: Query không hợp lệ
+ *       500:
+ *         description: Lỗi server
+ */
+/**
+ * @swagger
  * /api/v1/service/create:
  *   post:
  *     summary: Tạo dịch vụ mới
