@@ -23,6 +23,7 @@ export const sendOTPMail = async (toEmail, otp) => {
 
   await transporter.sendMail(mailOptions);
 };
+
 export const sendOTP = async (toEmail, otp) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",

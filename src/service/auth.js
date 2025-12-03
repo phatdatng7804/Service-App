@@ -5,6 +5,10 @@ import { sendOTPMail, sendOTP } from "../utils/sendmail";
 import { v4 as uuidv4 } from "uuid";
 const User = db.User;
 const forgot = db.PasswordResetOtp;
+import { sendOTPMail } from "../utils/sendmail";
+import { numberPhone } from "../helper/joi_schema";
+const User = db.User;
+
 const hashPassword = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 const generateOTP = () => {
@@ -38,6 +42,11 @@ export const register = (body) =>
         otp_expires: otpExpires,
       });
       await sendOTPMail(email, otp);
+
+      resolve({
+        err: user ? 0 : 1,
+        mes: "Register success. Please check email for OTP verification.",
+
       resolve({
         err: user ? 0 : 1,
         mes: "Register success. Please check email for OTP verification.",
@@ -46,6 +55,35 @@ export const register = (body) =>
       reject(error);
     }
   });
+export const verifyOTP = (numberPhone, otp) => {
+  new Promise(async (resolve, reject) => {
+    try {
+      const user = await User.findOne({
+        where: { phone_number: numberPhone },
+      });
+      if (!user) {
+        return resolve({ err: 1, mes: "User not found" });
+      }
+      if (user.otp_code !== otp) {
+        return resolve({ err: 1, mes: "Invalid OTP" });
+      }
+      if (user.otp_expires < new Date()) {
+        return resolve({ err: 1, mes: "OTP expired" });
+      }
+      user.is_active = true;
+      user.otp_code = null;
+      user.otp_expires = null;
+      await user.save();
+
+      resolve({
+        err: 0,
+        mes: "Verify success. You can login now.",
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
 export const verifyOTP = (numberPhone, otp) => {
   new Promise(async (resolve, reject) => {
     try {

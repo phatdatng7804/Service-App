@@ -16,6 +16,7 @@ export const verifySchema = Joi.object({
   numberPhone: numberPhone,
   otp: Joi.string().length(6).required(),
 });
+
 export const forgotSchema = Joi.object({
   numberPhone: numberPhone,
 });
@@ -25,3 +26,4 @@ export const passResetSchema = Joi.object({
 export const verifyOTP = Joi.object({
   otp: Joi.string().length(6).required(),
 });
+

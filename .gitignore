@@ -1,4 +1,9 @@
 /node_modules
 .env
+
 app.tar
 src/config/firebase-service-account.json
+
+api.http
+app.tar
+

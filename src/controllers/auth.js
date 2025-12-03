@@ -8,6 +8,10 @@ import {
   RegisterSchema,
   verifySchema,
   verifyOTP,
+  numberPhone,
+  password,
+  RegisterSchema,
+  verifySchema,
 } from "../helper/joi_schema";
 import Joi from "joi";
 

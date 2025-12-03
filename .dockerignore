@@ -10,6 +10,7 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 firebase-service-account
+
 .env.local
 .env.development
 .env.production
