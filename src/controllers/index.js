@@ -6,3 +6,4 @@ export * from "./booking";
 export * from "./controller.rating";
 export * from "./controller.ratingAd";
 export * from "./upload";
+export * from "./favorite";

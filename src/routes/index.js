@@ -6,6 +6,7 @@ import adminUser from "./adminUser.js";
 import booking from "./booking.js";
 import rating from "./rating.js";
 import adminRating from "./adminRating.js";
+import favorite from "./favorites.js";
 import { notFound } from "../middlewares/handle_error";
 
 const initRoutes = (app) => {
@@ -17,6 +18,7 @@ const initRoutes = (app) => {
   app.use("/api/v1/booking", booking);
   app.use("/api/v1/rating", rating);
   app.use("/api/v1/admin-rating", adminRating);
+  app.use("/api/v1/favorite", favorite);
   app.use(notFound);
 };
 module.exports = initRoutes;

@@ -21,7 +21,14 @@ module.exports = (sequelize, DataTypes) => {
         as: "creator",
         foreignKey: "created_by",
       });
-      // define association here
+      Service.hasMany(models.Favorite, {
+        foreignKey: "service_id",
+        as: "favorites",
+      });
+      Service.hasMany(models.Rating, {
+        foreignKey: "service_id",
+        as: "ratings",
+      });
     }
   }
   Service.init(

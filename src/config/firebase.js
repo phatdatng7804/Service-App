@@ -1,10 +1,17 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("../../firebase-service-account");
+const path = require("path");
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-}
+const serviceAccountPath = path.join(
+  __dirname,
+  "firebase-service-account.json"
+);
+
+console.log("Using service account file at:", serviceAccountPath);
+
+const serviceAccount = require(serviceAccountPath);
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 module.exports = admin;

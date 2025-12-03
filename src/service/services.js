@@ -1,16 +1,31 @@
 import db from "../models";
 import cloudinary from "../config/cloudinary";
 import { up } from "../migrations/20251123140348-add-avatar";
+import { fn } from "sequelize";
 const User = db.User;
 const Service = db.Service;
 const Category = db.Category;
+const Rating = db.Rating;
 export const getAllServices = () =>
   new Promise(async (resolve, reject) => {
     try {
       const response = await Service.findAll({
         include: [
           { model: Category, as: "category", attributes: ["id", "name"] },
+          {
+            model: Rating,
+            as: "ratings",
+            attributes: [],
+          },
         ],
+        attributes: {
+          include: [
+            [fn("AVG", col("ratings.rating")), "average_rating"][
+              (fn("COUNT", col("ratings.id")), "rating_count")
+            ],
+          ],
+        },
+        group: ["Service.id", "category.id"],
         order: [["createdAt", "DESC"]],
       });
       resolve({

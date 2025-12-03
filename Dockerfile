@@ -24,6 +24,7 @@ RUN npm install --omit=dev
 # Copy build output
 COPY --from=builder /app/dist ./dist
 
+COPY --from=builder /app/src/config/firebase-service-account.json ./dist/src/config/firebase-service-account.json
 # Copy only what is needed for Sequelize migrations (not entire src)
 COPY --from=builder /app/src/migrations ./src/migrations
 COPY --from=builder /app/.sequelizerc ./.sequelizerc

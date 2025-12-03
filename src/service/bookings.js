@@ -4,7 +4,6 @@ import { Sequelize, Op } from "sequelize";
 import {
   notifyBookingCreated,
   notifyBookingConfirmed,
-  notifyBookingIncoming,
   notifyBookingCompleted,
   notifyBookingCanceled,
 } from "./appNotification";
