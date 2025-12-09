@@ -7,7 +7,9 @@ import booking from "./booking.js";
 import rating from "./rating.js";
 import adminRating from "./adminRating.js";
 import favorite from "./favorites.js";
+import staffService from "./staffService.js";
 import { notFound } from "../middlewares/handle_error";
+import deviceToken from "../models/deviceToken.js";
 
 const initRoutes = (app) => {
   app.use("/api/v1/user", user);
@@ -19,6 +21,8 @@ const initRoutes = (app) => {
   app.use("/api/v1/rating", rating);
   app.use("/api/v1/admin-rating", adminRating);
   app.use("/api/v1/favorite", favorite);
+  app.use("/api/v1/device-token", deviceToken);
+  app.use("/api/v1/staff", staffService);
   app.use(notFound);
 };
 module.exports = initRoutes;

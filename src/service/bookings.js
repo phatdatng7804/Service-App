@@ -74,12 +74,16 @@ export const createBooking = (data) => {
         start_time,
         end_time,
         note,
+        booking_type: rawBookingType,
+        address_text,
       } = data;
+
       const user_id = data.user_id || data.user?.id || data.req?.user?.id;
       if (!user_id) {
         await transaction.rollback();
         return resolve({ err: 1, mes: "User ID is required" });
       }
+      // Lấy service + creator (staff)
       const service = await Service.findByPk(service_id, {
         include: [
           { model: User, as: "creator", attributes: ["id", "full_name"] },
@@ -95,6 +99,51 @@ export const createBooking = (data) => {
         await transaction.rollback();
         return resolve({ err: 1, mes: "No staff assigned to this service" });
       }
+      const serviceType = service.service_type;
+      let booking_type = rawBookingType;
+      if (!booking_type) {
+        if (serviceType === "at_store") booking_type = "at_store";
+        else if (serviceType === "at_home") booking_type = "at_home";
+      }
+      if (serviceType === "at_store" && booking_type !== "at_store") {
+        await transaction.rollback();
+        return resolve({
+          err: 1,
+          mes: "Dịch vụ này chỉ hỗ trợ thực hiện tại salon",
+        });
+      }
+      if (serviceType === "at_home" && booking_type !== "at_home") {
+        await transaction.rollback();
+        return resolve({
+          err: 1,
+          mes: "Dịch vụ này chỉ hỗ trợ phục vụ tại địa chỉ khách hàng",
+        });
+      }
+      if (
+        serviceType === "both" &&
+        !["at_store", "at_home"].includes(booking_type)
+      ) {
+        await transaction.rollback();
+        return resolve({
+          err: 1,
+          mes: "Loại phục vụ không hợp lệ cho dịch vụ này",
+        });
+      }
+      if (!booking_type) {
+        await transaction.rollback();
+        return resolve({
+          err: 1,
+          mes: "Vui lòng chọn loại phục vụ (tại salon hoặc tại nhà)",
+        });
+      }
+      if (booking_type === "at_home" && !address_text) {
+        await transaction.rollback();
+        return resolve({
+          err: 1,
+          mes: "Vui lòng nhập địa chỉ khi chọn phục vụ tại nhà",
+        });
+      }
+
       let numberPhone = number_phone;
       if (!numberPhone && user_id) {
         const customer = await User.findByPk(user_id, {
@@ -113,6 +162,7 @@ export const createBooking = (data) => {
           status: { [Op.in]: ["pending", "confirmed"] },
         },
         transaction,
+        lock: transaction.LOCK.UPDATE,
       });
       if (conflict) {
         await transaction.rollback();
@@ -121,18 +171,23 @@ export const createBooking = (data) => {
           mes: "Time slot already booked for this staff",
         });
       }
-      const newBooking = await Booking.create({
-        service_id,
-        user_id,
-        number_phone: numberPhone,
-        staff_id,
-        booking_date,
-        start_time,
-        end_time,
-        status: "pending",
-        note,
-        total_price: service.price,
-      });
+      const newBooking = await Booking.create(
+        {
+          service_id,
+          user_id,
+          number_phone: numberPhone,
+          staff_id,
+          booking_date,
+          start_time,
+          end_time,
+          status: "pending",
+          note,
+          total_price: service.price,
+          booking_type,
+          address_text,
+        },
+        { transaction }
+      );
       await transaction.commit();
       notifyBookingCreated(user_id, newBooking).catch((e) =>
         console.log("notifyBookingCreated (customer) error:", e.message)
@@ -322,3 +377,75 @@ export const cancelAllBooking = (staff_id, note) =>
       reject(error);
     }
   });
+export const getHistoryBooking = (data) => {
+  new Promise(async (resolve, reject) => {
+    try {
+      const user_id = data.user_id || data.req?.user?.id;
+      if (!user_id) {
+        return resolve({ err: 1, mes: "User ID is required" });
+      }
+      const query = data.query || data;
+      let { page = 1, limit = 10, status, from_date, to_date } = query;
+
+      page = Number(page) || 1;
+      limit = Number(limit) || 10;
+      const offset = (page - 1) * limit;
+      const where = { user_id };
+
+      if (status && status !== "all") {
+        where.status = status;
+      } else {
+        where.status = { [Op.in]: ["completed", "canceled"] };
+      }
+      if (from_date && to_date) {
+        where.booking_date = { [Op.between]: [from_date, to_date] };
+      } else if (from_date) {
+        where.booking_date = { [Op.gte]: from_date };
+      } else if (to_date) {
+        where.booking_date = { [Op.lte]: to_date };
+      }
+
+      const { count, rows } = await Booking.findAndCountAll({
+        where,
+        include: [
+          {
+            model: Service,
+            as: "service",
+            attributes: ["id", "name"],
+          },
+          {
+            model: User,
+            as: "staff",
+            attributes: ["id", "full_name", "avatar"],
+          },
+          {
+            model: Rating,
+            as: "rating",
+            attributes: ["id", "rating", "comment"],
+          },
+        ],
+        order: [
+          ["booking_date", "DESC"],
+          ["start_time", "ASC"],
+        ],
+        limit,
+        offset,
+      });
+      return resolve({
+        err: 0,
+        mes: "Get booking history success",
+        data: {
+          rows,
+          pagination: {
+            page,
+            limit,
+            totalRows: count,
+            totalPages: Math.ceil(count / limit),
+          },
+        },
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

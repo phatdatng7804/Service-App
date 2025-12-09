@@ -4,10 +4,11 @@ import Joi from "joi";
 
 export const getAllFavorites = async (req, res) => {
   try {
-    const { error } = Joi.object().validate(req.query);
+    const { error, value } = Joi.object().validate(req.query);
     if (error) return badRequest(error.details[0].message, res);
     const user_id = req.user.id;
-    const response = await service.getAllFavorite(user_id);
+    const service_id = value.service_id;
+    const response = await service.getAllFavorite(user_id, service_id);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

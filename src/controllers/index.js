@@ -7,3 +7,5 @@ export * from "./controller.rating";
 export * from "./controller.ratingAd";
 export * from "./upload";
 export * from "./favorite";
+export * from "./deviceToken";
+export * from "./staffService";

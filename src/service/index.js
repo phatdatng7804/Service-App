@@ -8,3 +8,6 @@ export * from "./service.rating";
 export * from "./service.AdminRating";
 export * from "./user.upload";
 export * from "./serviceFavorite";
+export * from "./category";
+export * from "./staffService";
+export * from "./firebase";

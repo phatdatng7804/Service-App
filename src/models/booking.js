@@ -40,6 +40,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TIME,
         field: "time_end",
       },
+      booking_type: {
+        type: DataTypes.ENUM("at_home", "at_store"),
+        allowNull: false,
+        defaultValue: "at_store",
+      },
+      address_text: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       status: DataTypes.ENUM("pending", "confirmed", "completed", "canceled"),
       note: DataTypes.TEXT,
       total_price: DataTypes.DECIMAL(12, 0),

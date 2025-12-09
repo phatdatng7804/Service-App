@@ -84,3 +84,14 @@ export const cancelAllBookings = async (req, res) => {
     return internalSvError(res);
   }
 };
+export const getHistoryBookings = async (req, res) => {
+  try {
+    const { error } = Joi.object().validate(req.query);
+    if (error) return badRequest(error.details[0].message, res);
+    const response = await service.getHistoryBooking(req.user, req.query);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return internalSvError(res);
+  }
+};

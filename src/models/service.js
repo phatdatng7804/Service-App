@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         as: "category",
         foreignKey: "category_id",
       });
-      Service.belongsToMany(models.User, {
+      Service.belongsTo(models.User, {
         through: models.StaffService,
         foreignKey: "service_id",
         as: "staffs",

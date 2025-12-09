@@ -28,6 +28,12 @@ export const createBookingSchema = Joi.object({
       "string.pattern.base": "The end time must be in the format HH:mm (24h)",
       "any.required": "End time is required",
     }),
+  booking_type: Joi.string().valid("at_store", "at_home").optional(),
+  address_text: Joi.when("booking_type", {
+    is: "at_home",
+    then: Joi.string().min(5).required(),
+    otherwise: Joi.string().allow(null, ""),
+  }),
   note: Joi.string().allow("", null).max(255),
 });
 export const updateBookingSchema = Joi.object({

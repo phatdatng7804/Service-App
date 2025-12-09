@@ -1,11 +1,11 @@
 import db from "../models";
 import cloudinary from "../config/cloudinary";
-import { up } from "../migrations/20251123140348-add-avatar";
-import { fn } from "sequelize";
+import { fn, col } from "sequelize";
 const User = db.User;
 const Service = db.Service;
 const Category = db.Category;
 const Rating = db.Rating;
+const StaffService = db.StaffService;
 export const getAllServices = () =>
   new Promise(async (resolve, reject) => {
     try {
@@ -17,15 +17,39 @@ export const getAllServices = () =>
             as: "ratings",
             attributes: [],
           },
+          {
+            model: User,
+            as: "creator",
+            attributes: ["id", "full_name", "avatar", "phone_number"],
+            include: [
+              {
+                model: StaffService,
+                as: "staffProfile",
+                attributes: [
+                  "store_name",
+                  "store_address",
+                  "store_lat",
+                  "store_lng",
+                  "experience_years",
+                  "bio",
+                  "is_active",
+                ],
+              },
+            ],
+          },
         ],
         attributes: {
           include: [
-            [fn("AVG", col("ratings.rating")), "average_rating"][
-              (fn("COUNT", col("ratings.id")), "rating_count")
-            ],
+            [fn("AVG", col("ratings.rating")), "average_rating"],
+            [fn("COUNT", col("ratings.id")), "rating_count"],
           ],
         },
-        group: ["Service.id", "category.id"],
+        group: [
+          "Service.id",
+          "category.id",
+          "creator.id",
+          "creator->staffProfile.id",
+        ],
         order: [["createdAt", "DESC"]],
       });
       resolve({
