@@ -10,6 +10,7 @@ export const getAllServices = async (req, res) => {
     const response = await service.getAllServices();
     return res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     return internalSvError(res);
   }
 };

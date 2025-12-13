@@ -49,7 +49,7 @@ export const removeFavorite = (user_id, service_id) => {
   });
 };
 export const getAllFavorite = (user_id) => {
-  new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const favorites = await Favorite.findAll({
         where: { user_id },
@@ -57,7 +57,7 @@ export const getAllFavorite = (user_id) => {
           {
             model: Service,
             as: "service",
-            attributes: ["id", "name", "description", "price"],
+            attributes: ["id", "name", "description", "price", "image"],
           },
         ],
       });

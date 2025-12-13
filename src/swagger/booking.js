@@ -207,3 +207,40 @@
  *       500:
  *         description: Lỗi server
  */
+/**
+ * @swagger
+ * /api/v1/booking/history:
+ *   get:
+ *     summary: Lấy lịch sử booking (theo quyền user)
+ *     tags: [Booking]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         description: Lọc theo trạng thái booking
+ *       - in: query
+ *         name: date
+ *         schema:
+ *           type: string
+ *         description: Lọc theo ngày booking
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Trang (pagination)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Số lượng mỗi trang
+ *     responses:
+ *       200:
+ *         description: Thành công
+ *       400:
+ *         description: Query không hợp lệ
+ *       500:
+ *         description: Lỗi server
+ */

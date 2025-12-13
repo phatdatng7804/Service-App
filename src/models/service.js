@@ -12,11 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         as: "category",
         foreignKey: "category_id",
       });
-      Service.belongsToMany(models.User, {
-        through: models.StaffService,
-        foreignKey: "service_id",
-        as: "staffs",
-      });
       Service.belongsTo(models.User, {
         as: "creator",
         foreignKey: "created_by",
