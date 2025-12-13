@@ -11,3 +11,4 @@ export * from "./serviceFavorite";
 export * from "./category";
 export * from "./staffService";
 export * from "./firebase";
+export * from "./service.notification";

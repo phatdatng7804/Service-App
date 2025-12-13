@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/device-tokens/register:
+ * /api/v1/device-token/register:
  *   post:
  *     summary: Đăng ký hoặc cập nhật FCM device token cho người dùng hiện tại
  *     tags: [DeviceToken]
@@ -26,7 +26,7 @@
  */
 /**
  * @swagger
- * /api/v1/device-tokens/send:
+ * /api/v1/device-token/send:
  *   post:
  *     summary: Gửi thông báo đẩy đến người dùng
  *     tags: [DeviceToken]

@@ -4,6 +4,6 @@ import { verifyToken } from "../middlewares/handle_staff";
 const routes = express.Router();
 
 routes.use(verifyToken);
-routes.post("/device-token/register", controllers.registerDeviceTokens);
-routes.post("/device-token/send", controllers.sendNotification);
+routes.post("/register", controllers.registerDeviceTokens);
+routes.post("/send", controllers.sendNotification);
 module.exports = routes;

@@ -12,6 +12,9 @@ export const registerDeviceToken = async ({
   if (!fcm_token) {
     throw new Error("Missing fcm_token (Expo push token)");
   }
+  if (!device_id) {
+    throw new Error("Missing device_id");
+  }
   const [record, created] = await DeviceToken.findOrCreate({
     where: {
       user_id,

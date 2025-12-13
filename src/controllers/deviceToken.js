@@ -8,6 +8,9 @@ import {
 export const registerDeviceTokens = async (req, res) => {
   try {
     const user_id = req.user?.id;
+    if (!user_id) {
+      return unauthorized("User not authenticated", res);
+    }
     const { error, value } = deviceTokenSchema.validate(req.body, {
       abortEarly: false,
       skipFunctions: true,
@@ -22,7 +25,7 @@ export const registerDeviceTokens = async (req, res) => {
     const response = await service.registerDeviceToken(payload);
     return res.status(200).json(response);
   } catch (error) {
-    return internalSvError(error);
+    return internalSvError(res, error);
   }
 };
 export const sendNotification = async (req, res) => {

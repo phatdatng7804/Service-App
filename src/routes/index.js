@@ -9,8 +9,8 @@ import adminRating from "./adminRating.js";
 import favorite from "./favorites.js";
 import staffService from "./staffService.js";
 import { notFound } from "../middlewares/handle_error";
-import deviceToken from "../models/deviceToken.js";
-
+import deviceToken from "./deviceToken.js";
+import notification from "./notification.js";
 const initRoutes = (app) => {
   app.use("/api/v1/user", user);
   app.use("/api/v1/auth", auth);
@@ -23,6 +23,7 @@ const initRoutes = (app) => {
   app.use("/api/v1/favorite", favorite);
   app.use("/api/v1/device-token", deviceToken);
   app.use("/api/v1/staff", staffService);
+  app.use("/api/v1/notification", notification);
   app.use(notFound);
 };
 module.exports = initRoutes;
