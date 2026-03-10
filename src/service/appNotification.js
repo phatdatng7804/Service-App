@@ -28,9 +28,9 @@ export const notifyBookingCreated = (userId, booking) =>
 export const notifyBookingConfirmed = (userId, booking, provider) =>
   new Promise(async (resolve, reject) => {
     try {
-      const type = "booking_confirmed";
       const title = `Đơn #${booking.id} đã được xác nhận`;
       const body = `Vui lòng đến đúng ${booking.time}`;
+      const type = "booking_confirmed";
       const data = {
         type,
         bookingId: String(booking.id),
@@ -53,11 +53,11 @@ export const notifyBookingConfirmed = (userId, booking, provider) =>
 export const notifyBookingIncoming = (userId, booking, provider) =>
   new Promise(async (resolve, reject) => {
     try {
-      const type = "booking_incoming";
       const title = "Thợ đang trên đường đến";
       const body = `${
         provider?.full_name || "Thợ"
       } đang di chuyển đến địa chỉ của bạn.`;
+      const type = "booking_incoming";
       const data = {
         type,
         bookingId: String(booking.id),

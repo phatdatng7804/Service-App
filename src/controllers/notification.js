@@ -25,6 +25,7 @@ export const getMyNotifications = async (req, res) => {
     });
     return res.status(200).json(response);
   } catch (err) {
-    return internalSvError(err, res);
+    console.log(err);
+    return internalSvError(res);
   }
 };

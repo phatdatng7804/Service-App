@@ -95,3 +95,4 @@ export const getHistoryBookings = async (req, res) => {
     return internalSvError(res);
   }
 };
+

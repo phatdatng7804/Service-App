@@ -8,7 +8,7 @@ export const getMyNotification = ({ user_id, page = 1, limit = 20 }) =>
       const offset = (page - 1) * limit;
       const { rows, count } = await Notification.findAndCountAll({
         where: { user_id },
-        order: [["createAt", "DESC"]],
+        order: [["createdAt", "DESC"]],
         limit,
         offset,
       });
