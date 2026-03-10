@@ -12,6 +12,7 @@ const Booking = db.Booking;
 const Service = db.Service;
 const Cancel = db.BookingCancel;
 const User = db.User;
+
 export const getAllBooking = (user, filter = {}) =>
   new Promise(async (resolve, reject) => {
     try {
